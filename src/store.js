@@ -1,12 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+const storageKey = '__q-app-state';
+
+const storage = JSON.parse(localStorage.getItem(storageKey)) || {};
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		percent: 0.5,
-		history: [],
+		percent: storage.percent || 0.5,
+		history: storage.history || [],
 		sessionHistory: []
 	},
 	mutations: {
@@ -37,7 +41,10 @@ export default new Vuex.Store({
 			context.commit('normalizePercent');
 			context.dispatch('saveState');
 		},
-		saveState() {
+		saveState(context) {
+			const { percent, history } = context.state;
+			const saved = { percent, history };
+			localStorage.setItem(storageKey, JSON.stringify(saved));
 		}
 	}
 });
