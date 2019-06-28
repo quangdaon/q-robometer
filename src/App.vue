@@ -39,7 +39,7 @@
 	}
 	
 	.main {
-		max-width: 1350px;
+		max-width: 1080px;
 		margin: auto;
 		text-align: center;
 	}
