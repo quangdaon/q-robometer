@@ -3,7 +3,7 @@
 		<div class="main">
 			<h1>Quangdao's Robometer</h1>
 			<scale :percentage="percent" />
-			<input type="range" v-model="percent" min="0" max="1" step="0.0001">
+			<input type="range" v-model.number="percent" min="0" max="1" step="0.0001">
 			<log />
 		</div>
 		
