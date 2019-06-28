@@ -22,7 +22,7 @@
 			},
 			getMessage({ change, message }) {
 				let percentText = (change * 100).toFixed(2) * 1 + '%';
-				if (change < 0) {
+				if (change >= 0) {
 					percentText = `+${percentText}`;
 				}
 

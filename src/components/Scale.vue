@@ -6,7 +6,7 @@
 		</div>
 		<div class="scale-meter">
 			<div class="scale-meter-container">
-				<div class="scale-meter-progress" :style="{width: percentHuman, background: getColor}"></div>
+				<div class="scale-meter-progress" :style="{right: percentRobot, background: getColor}"></div>
 			</div>
 		</div>
 		<div class="scale-label scale-label-human">
@@ -102,13 +102,17 @@
 		position: relative;
 		background: #ddd;
 		height: 30px;
+		border-radius: 50px;
+		overflow: hidden;
 	}
 	
 	.scale-meter-progress {
 		position: absolute;
-		left: 0;
+		left: auto;
 		top: 0;
 		height: 100%;
+		width: 100%;
 		background: #000;
+		border-radius: 50px;
 	}
 </style>
