@@ -40,7 +40,7 @@
 </script>
 
 <style>
-	@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+	@import url('https://fonts.googleapis.com/css?family=Roboto:400,700,400i&display=swap');
 	
 	*, *:before, *:after {
 		box-sizing: border-box;
@@ -51,7 +51,7 @@
 	}
 	
 	.main {
-		max-width: 1080px;
+		max-width: 900px;
 		margin: auto;
 		text-align: center;
 	}
