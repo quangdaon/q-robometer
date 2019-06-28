@@ -2,7 +2,7 @@
 	<div id="app">
 		<div class="main">
 			<h1>Quangdao's Robometer</h1>
-			<scale :percentage="percent" />
+			<scale />
 			<input type="range" v-model.number="percentInput" @input="updatePercent(percentInput)" min="0" max="1" step="0.0001">
 			<log />
 		</div>
