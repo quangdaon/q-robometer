@@ -3,11 +3,10 @@
 		<div class="main">
 			<h1>Quangdao's Robometer</h1>
 			<scale />
-			<input type="range" v-model.number="percentInput" @input="updatePercent(percentInput)" min="0" max="1" step="0.0001">
 			<log />
 		</div>
 		
-		<control-panel />
+		<control-panel @change="handleControlPanelInput" />
 	</div>
 </template>
 
@@ -20,7 +19,6 @@
 		name: 'app',
 		data() {
 			return {
-				percentInput: 0,
 			};
 		},
 		components: {
@@ -29,11 +27,13 @@
 			'control-panel': ControlPanel
 		},
 		mounted() {
-			this.percentInput = this.$store.state.percent;
 		},
 		methods: {
 			updatePercent(val) {
-				this.$store.dispatch('updatePercent', val)
+				this.$store.dispatch('updatePercent', val);
+			},
+			handleControlPanelInput(input) {
+				this.$store.dispatch('handleChange', input);
 			}
 		}
 	};
@@ -41,6 +41,10 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+	
+	*, *:before, *:after {
+		box-sizing: border-box;
+	}
 	
 	#app {
 		font-family: Roboto, sans-serif;
