@@ -1,11 +1,11 @@
 <template>
-	<div class="panel">
+	<form @submit.prevent="submit" class="panel">
 		<div class="panel-row">
 			<div class="panel-left">
 				<label for="panel-change">Change %</label>
 			</div>
 			<div class="panel-right">
-				<input type="number" id="panel-change" v-model.number="changePercent" min="0" max="100" step="0.2">
+				<input type="number" id="panel-change" v-model.number="changePercent" min="-100" max="100" step="0.2">
 			</div>
 		</div>
 		<div class="panel-row">
@@ -18,10 +18,10 @@
 		</div>
 		<div class="panel-row">
 			<div class="panel-submit">
-				<button @click="submit">Submit</button>
+				<button type="submit">Submit</button>
 			</div>
 		</div>
-	</div>
+	</form>
 </template>
 
 <script>
