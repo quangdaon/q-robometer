@@ -19,6 +19,8 @@
 <script>
 
 	// https://stackoverflow.com/questions/7128675/from-green-to-red-color-depend-on-percentage
+	import { mapState } from 'vuex';
+
 	const percentColors = [
 		{ pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
 		{ pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
@@ -49,13 +51,6 @@
 	export default {
 		name: 'Scale',
 		props: {
-			percentage: {
-				type: Number,
-				required: true,
-				validator(val) {
-					return val >= 0 && val <= 1;
-				}
-			}
 		},
 		methods: {
 			getPercentDisplay(val) {
@@ -63,14 +58,15 @@
 			}
 		},
 		computed: {
+			...mapState(['percent']),
 			percentRobot() {
-				return this.getPercentDisplay(1 - this.percentage);
+				return this.getPercentDisplay(1 - this.percent);
 			},
 			percentHuman() {
-				return this.getPercentDisplay(this.percentage);
+				return this.getPercentDisplay(this.percent);
 			},
 			getColor() {
-				return getColorForPercentage(this.percentage);
+				return getColorForPercentage(this.percent);
 			}
 		}
 	};
