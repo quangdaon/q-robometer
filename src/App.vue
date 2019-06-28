@@ -2,7 +2,8 @@
 	<div id="app">
 		<div class="main">
 			<h1>Quangdao's Robometer</h1>
-			<scale />
+			<scale :percentage="percent" />
+			<input type="range" v-model="percent" min="0" max="1" step="0.0001">
 			<log />
 		</div>
 		
@@ -17,6 +18,11 @@
 
 	export default {
 		name: 'app',
+		data() {
+			return {
+				percent: 0.5
+			};
+		},
 		components: {
 			'scale': Scale,
 			'log': Log,
@@ -33,6 +39,8 @@
 	}
 	
 	.main {
+		max-width: 1350px;
+		margin: auto;
 		text-align: center;
 	}
 </style>
