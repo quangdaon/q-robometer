@@ -52,7 +52,12 @@
 	
 	.main {
 		max-width: 900px;
+		padding: 2em;
 		margin: auto;
 		text-align: center;
+	}
+	
+	.main h1 {
+		margin-top: 0;
 	}
 </style>

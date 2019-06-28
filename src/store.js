@@ -27,6 +27,9 @@ export default new Vuex.Store({
 		logAction(state, input) {
 			state.history.push(input);
 			state.sessionHistory.push(input);
+		},
+		clearSessionHistory(state) {
+			Vue.set(state, 'sessionHistory', []);
 		}
 	},
 	actions: {
@@ -45,6 +48,9 @@ export default new Vuex.Store({
 			const { percent, history } = context.state;
 			const saved = { percent, history };
 			localStorage.setItem(storageKey, JSON.stringify(saved));
+		},
+		clearSessionHistory(context) {
+			context.commit('clearSessionHistory');
 		}
 	}
 });

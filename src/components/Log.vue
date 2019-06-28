@@ -18,15 +18,22 @@
 		},
 		methods: {
 			getMessage({ change, message }) {
-				let percentText = (change * 100).toFixed(2) * 1 + '%';
-				if (change >= 0) {
-					percentText = `+${percentText}`;
-				}
+				const percentSymbol = change === 0 ? '±' : '+';
+				const percentText = `${(Math.abs(change) * 100).toFixed(2) * 1}%`;
+				const percentFavor = change > 0 ? 'Human' : change < 0 ? 'Robot' : '';
 
-				return `${percentText} - ${message}`;
+				return `${percentSymbol}${percentText} ${percentFavor} - ${message}`;
 			},
 			getStyles({ change }) {
-				return { color: change >= 0 ? '#080' : '#d00' };
+				const styles = {};
+				if (change > 0) {
+					styles.color = '#080';
+				}
+				if (change < 0) {
+					styles.color = '#d00';
+				}
+
+				return styles;
 			}
 		}
 	};

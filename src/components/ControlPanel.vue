@@ -1,5 +1,5 @@
 <template>
-	<form @submit.prevent="submit" class="panel">
+	<form @submit.prevent="submit" @keyup.esc="reset" class="panel">
 		<div class="panel-row">
 			<div class="panel-left">
 				<label for="panel-change">Change %</label>
@@ -17,7 +17,9 @@
 			</div>
 		</div>
 		<div class="panel-row">
-			<div class="panel-submit">
+			<div class="panel-buttons">
+				<button @click.prevent="clearLog" type="button">Clear Log</button>
+				<button @click.prevent="reset" type="button">Reset</button>
 				<button type="submit">Submit</button>
 			</div>
 		</div>
@@ -38,7 +40,15 @@
 				this.$emit('change', {
 					change: this.changed,
 					message: this.message
-				})
+				});
+				this.reset();
+			},
+			reset() {
+				this.changePercent = 0;
+				this.message = '';
+			},
+			clearLog(){
+				this.$store.dispatch('clearSessionHistory');
 			}
 		},
 		computed: {
@@ -62,7 +72,7 @@
 	
 	.panel-row {
 		display: flex;
-		margin: 1em 0px;
+		margin: 1em 0;
 	}
 	
 	.panel-row:first-child {
@@ -90,7 +100,7 @@
 		max-width: none;
 	}
 	
-	.panel-submit {
+	.panel-buttons {
 		margin-left: auto;
 	}
 </style>
