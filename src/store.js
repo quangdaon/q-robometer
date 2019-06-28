@@ -19,16 +19,25 @@ export default new Vuex.Store({
 		normalizePercent(state) {
 			if (state.percent > 1) state.percent = 1;
 			if (state.percent < 0) state.percent = 0;
+		},
+		logAction(state, input) {
+			state.history.push(input);
+			state.sessionHistory.push(input);
 		}
 	},
 	actions: {
 		updatePercent(context, val) {
 			context.commit('updatePercent', val);
 			context.commit('normalizePercent');
+			context.dispatch('saveState');
 		},
-		handleChange(context, val) {
-			context.commit('updatePercentRelative', val.change);
+		handleChange(context, input) {
+			context.commit('logAction', input);
+			context.commit('updatePercentRelative', input.change);
 			context.commit('normalizePercent');
+			context.dispatch('saveState');
+		},
+		saveState() {
 		}
 	}
 });
