@@ -1,17 +1,17 @@
 <template>
 	<div class="scale">
-		<div class="scale-label scale-label-robot">
-			<p class="scale-label-percent">{{percentRobot}}</p>
-			<p>Robot</p>
+		<div class="scale-label scale-label-human">
+			<p class="scale-label-percent">{{percentHuman}}</p>
+			<p>Human</p>
 		</div>
 		<div class="scale-meter">
 			<div class="scale-meter-container">
 				<div class="scale-meter-progress" :style="{right: percentRobot, background: getColor}"></div>
 			</div>
 		</div>
-		<div class="scale-label scale-label-human">
-			<p class="scale-label-percent">{{percentHuman}}</p>
-			<p>Human</p>
+		<div class="scale-label scale-label-robot">
+			<p class="scale-label-percent">{{percentRobot}}</p>
+			<p>Robot</p>
 		</div>
 	</div>
 </template>

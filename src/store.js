@@ -11,7 +11,8 @@ export default new Vuex.Store({
 	state: {
 		percent: storage.percent || 0.5,
 		history: storage.history || [],
-		sessionHistory: []
+		sessionHistory: [],
+		showFullHistory: false
 	},
 	mutations: {
 		updatePercent(state, val) {
@@ -30,6 +31,13 @@ export default new Vuex.Store({
 		},
 		clearSessionHistory(state) {
 			Vue.set(state, 'sessionHistory', []);
+		},
+		toggleHistoryMode(state, val) {
+			if (typeof val !== 'undefined') {
+				state.showFullHistory = val;
+			} else {
+				state.showFullHistory = !state.showFullHistory;
+			}
 		}
 	},
 	actions: {
@@ -51,6 +59,9 @@ export default new Vuex.Store({
 		},
 		clearSessionHistory(context) {
 			context.commit('clearSessionHistory');
+		},
+		toggleHistoryMode(context, val) {
+			context.commit('toggleHistoryMode', val);
 		}
 	}
 });

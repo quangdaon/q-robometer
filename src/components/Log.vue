@@ -13,8 +13,13 @@
 		name: 'Log',
 		computed: {
 			...mapState({
-				history: 'sessionHistory'
-			})
+				sessionHistory: 'sessionHistory',
+				fullHistory: 'history',
+				showFullHistory: 'showFullHistory'
+			}),
+			history() {
+				return this.showFullHistory ? this.fullHistory : this.sessionHistory;
+			}
 		},
 		methods: {
 			getMessage({ change, message }) {
