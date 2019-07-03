@@ -47,6 +47,9 @@
 </template>
 
 <script>
+	import { db } from '../db';
+
+	let historyRef = db.ref('pings');
 	export default {
 		name: 'ControlPanel',
 		data() {
@@ -55,12 +58,19 @@
 				message: ''
 			};
 		},
+		firebase: {
+			history: historyRef
+		},
 		methods: {
 			submit() {
-				this.$emit('change', {
+				let ping = {
 					change: this.changed,
 					message: this.message
-				});
+				};
+				
+				historyRef.push(ping);
+				this.$emit('change', ping);
+				
 				this.reset();
 			},
 			reset() {
