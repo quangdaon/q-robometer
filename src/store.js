@@ -12,7 +12,7 @@ export default new Vuex.Store({
 	state: {
 		ready: false,
 		history: [],
-		showFullHistory: storage.showFullHistory || false,
+		showFullHistory: typeof storage.showFullHistory !== 'undefined' ? storage.showFullHistory : true,
 		sessionStart: Date.now()
 	},
 	getters: {
