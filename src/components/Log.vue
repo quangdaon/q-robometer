@@ -21,6 +21,7 @@
 				return this.showFullHistory ? this.fullHistory : this.sessionHistory;
 			}
 		},
+		
 		methods: {
 			getMessage({ change, message }) {
 				const percentSymbol = change === 0 ? '±' : '+';
