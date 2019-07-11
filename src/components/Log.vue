@@ -8,20 +8,26 @@
 
 <script>
 	import { mapState } from 'vuex';
+	import {db} from '../db'
+	const historyRef = db.ref('pings');
 
 	export default {
 		name: 'Log',
+		data() {
+			return {fullHistory: []}
+		},
 		computed: {
 			...mapState({
 				sessionHistory: 'sessionHistory',
-				fullHistory: 'history',
 				showFullHistory: 'showFullHistory'
 			}),
 			history() {
 				return this.showFullHistory ? this.fullHistory : this.sessionHistory;
 			}
 		},
-		
+		firebase : {
+			fullHistory: historyRef
+		},
 		methods: {
 			getMessage({ change, message }) {
 				const percentSymbol = change === 0 ? '±' : '+';

@@ -54,6 +54,7 @@
 		name: 'ControlPanel',
 		data() {
 			return {
+				history: [],
 				changePercent: 0,
 				message: ''
 			};
