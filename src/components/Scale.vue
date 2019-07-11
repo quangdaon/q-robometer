@@ -5,7 +5,7 @@
 			<p>Human</p>
 		</div>
 		<div class="scale-meter">
-			<div class="scale-meter-container">
+			<div class="scale-meter-container" :class="{danger: percent <= 0}">
 				<div class="scale-meter-progress" :style="{width: `calc(${percentHuman} + 50px)`, background: getColor}"></div>
 			</div>
 		</div>
@@ -120,6 +120,10 @@
 		overflow: hidden;
 	}
 	
+	.scale-meter-container.danger {
+		animation: danger 0.5s alternate infinite linear;
+	}
+	
 	.scale-meter-progress {
 		position: absolute;
 		left: -50px;
@@ -128,5 +132,15 @@
 		width: 100%;
 		background: #000;
 		border-radius: 50px;
+		transition: width 300ms;
+	}
+	
+	@keyframes danger {
+		from {
+			background: #ddd;
+		}
+		to {
+			background: #f00;
+		}
 	}
 </style>

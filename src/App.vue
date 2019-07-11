@@ -29,9 +29,6 @@
 		mounted() {
 		},
 		methods: {
-			updatePercent(val) {
-				this.$store.dispatch('updatePercent', val);
-			},
 			handleControlPanelInput(input) {
 				this.$store.dispatch('handleChange', input);
 			}
