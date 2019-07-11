@@ -49,7 +49,7 @@
 <script>
 	import { db } from '../db';
 
-	let historyRef = db.ref('pings');
+	const historyRef = db.ref('pings');
 	export default {
 		name: 'ControlPanel',
 		data() {

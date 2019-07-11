@@ -14,12 +14,14 @@
 	import Scale from './components/Scale';
 	import Log from './components/Log';
 	import ControlPanel from './components/ControlPanel';
+	import { db } from './db';
 
+	const historyRef = db.ref('pings');
+	
 	export default {
 		name: 'app',
 		data() {
-			return {
-			};
+			return {};
 		},
 		components: {
 			'scale': Scale,
@@ -27,6 +29,7 @@
 			'control-panel': ControlPanel
 		},
 		mounted() {
+			this.$store.dispatch('setHistoryRef', historyRef);
 		},
 		methods: {
 			handleControlPanelInput(input) {

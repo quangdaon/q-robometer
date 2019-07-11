@@ -1,14 +1,23 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { firebaseAction, vuexfireMutations  } from 'vuexfire';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		ready: false,
+		history: [],
 		sessionHistory: [],
 		showFullHistory: false
 	},
+	getters: {
+		percent(state) {
+			return state.history.reduce((a, b) => a + b.change, 0.5);
+		}
+	},
 	mutations: {
+		...vuexfireMutations,
 		logAction(state, input) {
 			state.sessionHistory.push(input);
 		},
@@ -21,9 +30,17 @@ export default new Vuex.Store({
 			} else {
 				state.showFullHistory = !state.showFullHistory;
 			}
+		},
+		stateReady(state) {
+			state.ready = true
 		}
 	},
 	actions: {
+		setHistoryRef: firebaseAction(({ bindFirebaseRef, commit }, { ref }) => {
+			bindFirebaseRef('history', ref).then(() => {
+				commit('stateReady')
+			});
+		}),
 		clearSessionHistory(context) {
 			context.commit('clearSessionHistory');
 		},
