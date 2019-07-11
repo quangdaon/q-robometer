@@ -6,7 +6,7 @@
 			<log />
 		</div>
 		
-		<control-panel @change="handleControlPanelInput" />
+		<control-panel />
 	</div>
 </template>
 
@@ -30,11 +30,6 @@
 		},
 		mounted() {
 			this.$store.dispatch('setHistoryRef', historyRef);
-		},
-		methods: {
-			handleControlPanelInput(input) {
-				this.$store.dispatch('handleChange', input);
-			}
 		}
 	};
 </script>

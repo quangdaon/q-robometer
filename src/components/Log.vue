@@ -7,15 +7,17 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex';
+	import { mapGetters, mapState } from 'vuex';
 
 	export default {
 		name: 'Log',
 		computed: {
 			...mapState({
-				sessionHistory: 'sessionHistory',
 				fullHistory: 'history',
 				showFullHistory: 'showFullHistory'
+			}),
+			...mapGetters({
+				sessionHistory: 'sessionHistory'
 			}),
 			history() {
 				return this.showFullHistory ? this.fullHistory : this.sessionHistory;

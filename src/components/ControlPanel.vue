@@ -23,7 +23,7 @@
 						<label for="panel-change">Change %</label>
 					</div>
 					<div class="panel-right">
-						<input type="number" id="panel-change" v-model.number="changePercent" min="-100" max="100" step="0.5">
+						<input type="number" id="panel-change" v-model.number="changePercent" min="-8" max="8" step="0.5">
 					</div>
 				</div>
 				<div class="panel-row">
@@ -63,11 +63,11 @@
 			submit() {
 				let ping = {
 					change: this.changed,
-					message: this.message
+					message: this.message,
+					submitted: Date.now()
 				};
 				
 				historyRef.push(ping);
-				this.$emit('change', ping);
 				
 				this.reset();
 			},
