@@ -2,13 +2,17 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { firebaseAction, vuexfireMutations } from 'vuexfire';
 
+const storageKey = '__q-app-state';
+
+const storage = JSON.parse(localStorage.getItem(storageKey)) || {};
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
 		ready: false,
 		history: [],
-		showFullHistory: false,
+		showFullHistory: storage.showFullHistory || false,
 		sessionStart: Date.now()
 	},
 	getters: {
@@ -44,8 +48,14 @@ export default new Vuex.Store({
 		clearSessionHistory(context) {
 			context.commit('clearSessionHistory');
 		},
+		saveSettings(context) {
+			const { showFullHistory } = context.state;
+			const saved = { showFullHistory };
+			localStorage.setItem(storageKey, JSON.stringify(saved));
+		},
 		toggleHistoryMode(context, val) {
 			context.commit('toggleHistoryMode', val);
+			context.dispatch('saveSettings');
 		}
 	}
 });
