@@ -41,6 +41,9 @@ export default new Vuex.Store({
 				commit('stateReady')
 			});
 		}),
+		handleChange(context, data) {
+			context.commit('logAction', data);
+		},
 		clearSessionHistory(context) {
 			context.commit('clearSessionHistory');
 		},

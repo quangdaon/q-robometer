@@ -50,17 +50,14 @@
 	import { db } from '../db';
 
 	const historyRef = db.ref('pings');
+
 	export default {
 		name: 'ControlPanel',
 		data() {
 			return {
-				history: [],
 				changePercent: 0,
 				message: ''
 			};
-		},
-		firebase: {
-			history: historyRef
 		},
 		methods: {
 			submit() {
