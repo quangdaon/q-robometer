@@ -19,9 +19,7 @@
 <script>
 
 	// https://stackoverflow.com/questions/7128675/from-green-to-red-color-depend-on-percentage
-	import { db } from '../db';
-
-	const historyRef = db.ref('pings');
+	import { mapGetters, mapState } from 'vuex';
 
 	const percentColors = [
 		{ pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
@@ -53,16 +51,7 @@
 	export default {
 		name: 'Scale',
 		data() {
-			return {
-				ready: false,
-				history: []
-			};
-		},
-		mounted() {
-			historyRef.once('value', () => this.ready = true);
-		},
-		firebase: {
-			history: historyRef
+			return {};
 		},
 		methods: {
 			getPercentDisplay(val) {
@@ -70,9 +59,8 @@
 			}
 		},
 		computed: {
-			percent() {
-				return this.history.reduce((a, b) => a + b.change, 0.5);
-			},
+			...mapState(['ready']),
+			...mapGetters(['percent']),
 			percentRobot() {
 				return this.getPercentDisplay(1 - this.percent);
 			},
