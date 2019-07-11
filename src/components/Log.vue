@@ -8,13 +8,14 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import {db} from '../db'
+	import { db } from '../db';
+
 	const historyRef = db.ref('pings');
 
 	export default {
 		name: 'Log',
 		data() {
-			return {fullHistory: []}
+			return { fullHistory: [] };
 		},
 		computed: {
 			...mapState({
@@ -25,7 +26,7 @@
 				return this.showFullHistory ? this.fullHistory : this.sessionHistory;
 			}
 		},
-		firebase : {
+		firebase: {
 			fullHistory: historyRef
 		},
 		methods: {

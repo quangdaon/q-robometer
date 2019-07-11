@@ -1,12 +1,12 @@
 <template>
-	<div class="scale">
+	<div class="scale" v-if="ready">
 		<div class="scale-label scale-label-human">
 			<p class="scale-label-percent">{{percentHuman}}</p>
 			<p>Human</p>
 		</div>
 		<div class="scale-meter">
 			<div class="scale-meter-container">
-				<div class="scale-meter-progress" :style="{right: percentRobot, background: getColor}"></div>
+				<div class="scale-meter-progress" :style="{width: `calc(${percentHuman} + 50px)`, background: getColor}"></div>
 			</div>
 		</div>
 		<div class="scale-label scale-label-robot">
@@ -19,7 +19,9 @@
 <script>
 
 	// https://stackoverflow.com/questions/7128675/from-green-to-red-color-depend-on-percentage
-	import { mapState } from 'vuex';
+	import { db } from '../db';
+
+	const historyRef = db.ref('pings');
 
 	const percentColors = [
 		{ pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
@@ -50,7 +52,17 @@
 
 	export default {
 		name: 'Scale',
-		props: {
+		data() {
+			return {
+				ready: false,
+				history: []
+			};
+		},
+		mounted() {
+			historyRef.once('value', () => this.ready = true);
+		},
+		firebase: {
+			history: historyRef
 		},
 		methods: {
 			getPercentDisplay(val) {
@@ -58,7 +70,9 @@
 			}
 		},
 		computed: {
-			...mapState(['percent']),
+			percent() {
+				return this.history.reduce((a, b) => a + b.change, 0.5);
+			},
 			percentRobot() {
 				return this.getPercentDisplay(1 - this.percent);
 			},
@@ -108,7 +122,7 @@
 	
 	.scale-meter-progress {
 		position: absolute;
-		left: auto;
+		left: -50px;
 		top: 0;
 		height: 100%;
 		width: 100%;
