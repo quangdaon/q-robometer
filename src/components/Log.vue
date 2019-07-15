@@ -1,13 +1,21 @@
 <template>
 	<div class="log">
 		<div class="log-item" v-for="(update, i) in history" :key="i">
-			<p class="log-message" :style="getStyles(update)">{{ getMessage(update) }}</p>
+			<p class="log-message" :style="getStyles(update)">
+				{{ getMessage(update) }}
+				<span class="log-delete">
+					- <a href="#" @click.prevent="deleteItem(update['.key'])">Delete</a>
+				</span>
+			</p>
 		</div>
 	</div>
 </template>
 
 <script>
 	import { mapGetters, mapState } from 'vuex';
+	import { db } from '../db';
+
+	const historyRef = db.ref('pings');
 
 	export default {
 		name: 'Log',
@@ -41,6 +49,9 @@
 				}
 
 				return styles;
+			},
+			async deleteItem(id) {
+				await historyRef.child(id).remove();
 			}
 		}
 	};
