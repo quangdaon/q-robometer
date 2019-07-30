@@ -1,5 +1,8 @@
+const crypto = require('crypto');
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { firebaseAction, vuexfireMutations } from 'vuexfire';
+import { db } from './db';
 
 const storageKey = '__q-app-state';
 
@@ -9,28 +12,24 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		percent: storage.percent || 0.5,
-		history: storage.history || [],
-		sessionHistory: [],
-		showFullHistory: false
+		ready: false,
+		history: [],
+		showFullHistory: typeof storage.showFullHistory !== 'undefined' ? storage.showFullHistory : true,
+		sessionStart: Date.now(),
+		auth: { validated: false, key: '' }
+	},
+	getters: {
+		percent(state) {
+			return state.history.reduce((a, b) => a + b.change, 0.5);
+		},
+		sessionHistory(state) {
+			return state.history.filter(p => p.submitted > state.sessionStart);
+		}
 	},
 	mutations: {
-		updatePercent(state, val) {
-			state.percent = val;
-		},
-		updatePercentRelative(state, val) {
-			state.percent += val;
-		},
-		normalizePercent(state) {
-			if (state.percent > 1) state.percent = 1;
-			if (state.percent < 0) state.percent = 0;
-		},
-		logAction(state, input) {
-			state.history.push(input);
-			state.sessionHistory.push(input);
-		},
+		...vuexfireMutations,
 		clearSessionHistory(state) {
-			Vue.set(state, 'sessionHistory', []);
+			Vue.set(state, 'sessionStart', Date.now());
 		},
 		toggleHistoryMode(state, val) {
 			if (typeof val !== 'undefined') {
@@ -38,30 +37,58 @@ export default new Vuex.Store({
 			} else {
 				state.showFullHistory = !state.showFullHistory;
 			}
+		},
+		stateReady(state) {
+			state.ready = true;
+		},
+		setAuth(state, val) {
+			state.auth.validated = val.validated;
+			state.auth.key = val.key;
 		}
 	},
 	actions: {
-		updatePercent(context, val) {
-			context.commit('updatePercent', val);
-			context.commit('normalizePercent');
-			context.dispatch('saveState');
-		},
-		handleChange(context, input) {
-			context.commit('logAction', input);
-			context.commit('updatePercentRelative', input.change);
-			context.commit('normalizePercent');
-			context.dispatch('saveState');
-		},
-		saveState(context) {
-			const { percent, history } = context.state;
-			const saved = { percent, history };
-			localStorage.setItem(storageKey, JSON.stringify(saved));
-		},
+		setHistoryRef: firebaseAction(({ bindFirebaseRef, commit }, { ref }) => {
+			bindFirebaseRef('history', ref).then(() => {
+				commit('stateReady');
+			});
+		}),
 		clearSessionHistory(context) {
 			context.commit('clearSessionHistory');
 		},
+		saveSettings(context) {
+			const { showFullHistory } = context.state;
+			const saved = { showFullHistory };
+			localStorage.setItem(storageKey, JSON.stringify(saved));
+		},
 		toggleHistoryMode(context, val) {
 			context.commit('toggleHistoryMode', val);
+			context.dispatch('saveSettings');
+		},
+		unauth(context) {
+			context.commit('setAuth', {
+				validated: false,
+				key: ''
+			});
+		},
+		async authenticate(context, val) {
+			const hash = crypto.createHmac('sha256', val).digest('hex');
+			await context.dispatch('validateHash', hash);
+
+			if (!context.state.auth.validated) {
+				alert('nope!');
+			}
+		},
+		async validateHash(context, hash) {
+			const snapshot = await db.ref('auth/password/' + hash).once('value');
+
+			if (snapshot.val()) {
+				const hmac = crypto.createHmac('sha256', snapshot.val()).digest('hex');
+
+				context.commit('setAuth', {
+					validated: true,
+					key: hmac
+				});
+			}
 		}
 	}
 });

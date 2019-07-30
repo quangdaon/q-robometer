@@ -6,7 +6,7 @@
 			<log />
 		</div>
 		
-		<control-panel @change="handleControlPanelInput" />
+		<control-panel />
 	</div>
 </template>
 
@@ -14,12 +14,14 @@
 	import Scale from './components/Scale';
 	import Log from './components/Log';
 	import ControlPanel from './components/ControlPanel';
+	import { db } from './db';
 
+	const historyRef = db.ref('pings');
+	
 	export default {
 		name: 'app',
 		data() {
-			return {
-			};
+			return {};
 		},
 		components: {
 			'scale': Scale,
@@ -27,14 +29,7 @@
 			'control-panel': ControlPanel
 		},
 		mounted() {
-		},
-		methods: {
-			updatePercent(val) {
-				this.$store.dispatch('updatePercent', val);
-			},
-			handleControlPanelInput(input) {
-				this.$store.dispatch('handleChange', input);
-			}
+			this.$store.dispatch('setHistoryRef', historyRef);
 		}
 	};
 </script>

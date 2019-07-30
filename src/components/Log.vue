@@ -1,21 +1,28 @@
 <template>
 	<div class="log">
 		<div class="log-item" v-for="(update, i) in history" :key="i">
-			<p class="log-message" :style="getStyles(update)">{{ getMessage(update) }}</p>
+			<p class="log-message" :style="getStyles(update)">
+				{{ getMessage(update) }}
+			</p>
 		</div>
 	</div>
 </template>
 
 <script>
-	import { mapState } from 'vuex';
+	import { mapGetters, mapState } from 'vuex';
+	import { db } from '../db';
+
+	const historyRef = db.ref('pings');
 
 	export default {
 		name: 'Log',
 		computed: {
 			...mapState({
-				sessionHistory: 'sessionHistory',
 				fullHistory: 'history',
 				showFullHistory: 'showFullHistory'
+			}),
+			...mapGetters({
+				sessionHistory: 'sessionHistory'
 			}),
 			history() {
 				return this.showFullHistory ? this.fullHistory : this.sessionHistory;
