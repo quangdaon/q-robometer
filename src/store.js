@@ -1,6 +1,8 @@
+const crypto = require('crypto');
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { firebaseAction, vuexfireMutations } from 'vuexfire';
+import { db } from './db';
 
 const storageKey = '__q-app-state';
 
@@ -13,7 +15,8 @@ export default new Vuex.Store({
 		ready: false,
 		history: [],
 		showFullHistory: typeof storage.showFullHistory !== 'undefined' ? storage.showFullHistory : true,
-		sessionStart: Date.now()
+		sessionStart: Date.now(),
+		auth: { validated: false, key: '' }
 	},
 	getters: {
 		percent(state) {
@@ -37,6 +40,10 @@ export default new Vuex.Store({
 		},
 		stateReady(state) {
 			state.ready = true;
+		},
+		setAuth(state, val) {
+			state.auth.validated = val.validated;
+			state.auth.key = val.key;
 		}
 	},
 	actions: {
@@ -56,6 +63,32 @@ export default new Vuex.Store({
 		toggleHistoryMode(context, val) {
 			context.commit('toggleHistoryMode', val);
 			context.dispatch('saveSettings');
+		},
+		unauth(context) {
+			context.commit('setAuth', {
+				validated: false,
+				key: ''
+			});
+		},
+		async authenticate(context, val) {
+			const hash = crypto.createHmac('sha256', val).digest('hex');
+			await context.dispatch('validateHash', hash);
+
+			if (!context.state.auth.validated) {
+				alert('nope!');
+			}
+		},
+		async validateHash(context, hash) {
+			const snapshot = await db.ref('auth/password/' + hash).once('value');
+
+			if (snapshot.val()) {
+				const hmac = crypto.createHmac('sha256', snapshot.val()).digest('hex');
+
+				context.commit('setAuth', {
+					validated: true,
+					key: hmac
+				});
+			}
 		}
 	}
 });

@@ -13,11 +13,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="panel-section">
+		<div class="panel-section" v-if="auth.validated">
 			<div class="panel-section-title">
 				<h3>Submit</h3>
 			</div>
-			<form @submit.prevent="submit" @keyup.esc="reset" class="panel-form">
+			<form @submit.prevent="submit" @keyup.esc="resetSubmit" class="panel-form">
 				<div class="panel-row">
 					<div class="panel-left">
 						<label for="panel-change">Change %</label>
@@ -37,7 +37,27 @@
 				<div class="panel-row">
 					<div class="panel-buttons">
 						<button @click.prevent="clearLog" type="button">Clear Log</button>
-						<button @click.prevent="reset" type="button">Reset</button>
+						<button @click.prevent="resetSubmit" type="button">Reset</button>
+						<button type="submit" :disabled="!canSubmit">Submit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="panel-section" v-else>
+			<div class="panel-section-title">
+				<h3>Authenticate</h3>
+			</div>
+			<form @submit.prevent="authenticate" @keyup.esc="resetAuth" class="panel-form">
+				<div class="panel-row">
+					<div class="panel-left">
+						<label for="panel-pass">What's the password???</label>
+					</div>
+					<div class="panel-right">
+						<input type="password" id="panel-pass" v-model="password">
+					</div>
+				</div>
+				<div class="panel-row">
+					<div class="panel-buttons">
 						<button type="submit">Submit</button>
 					</div>
 				</div>
@@ -48,6 +68,7 @@
 
 <script>
 	import { db } from '../db';
+	import { mapState } from 'vuex';
 
 	const historyRef = db.ref('pings');
 
@@ -56,30 +77,51 @@
 		data() {
 			return {
 				changePercent: 0,
-				message: ''
+				message: '',
+				password: '',
+				canSubmit: true
 			};
 		},
 		methods: {
-			submit() {
+			async submit() {
+				this.canSubmit = false;
 				let ping = {
 					change: this.changed,
 					message: this.message,
-					submitted: Date.now()
+					submitted: Date.now(),
+					key: this.$store.state.auth.key
 				};
-				
-				historyRef.push(ping);
-				
-				this.reset();
+
+				console.log(ping);
+
+				try {
+					await historyRef.push(ping);
+					this.resetSubmit();
+				} catch (e) {
+					console.log(e);
+					alert('something went wrong');
+					this.$store.dispatch('unauth');
+				}
+
+				this.canSubmit = true;
 			},
-			reset() {
+			resetSubmit() {
 				this.changePercent = 0;
 				this.message = '';
 			},
+			resetAuth() {
+				this.password = '';
+			},
 			clearLog() {
 				this.$store.dispatch('clearSessionHistory');
+			},
+			authenticate() {
+				this.$store.dispatch('authenticate', this.password);
+				this.resetAuth();
 			}
 		},
 		computed: {
+			...mapState(['auth']),
 			showFullHistory: {
 				get() {
 					return this.$store.state.showFullHistory;
