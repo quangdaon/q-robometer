@@ -96,10 +96,27 @@
 
 				try {
 					await historyRef.push(ping);
+
+					this.$gtm.trackEvent({
+						event: 'update',
+						category: 'Ping',
+						action: ping.change > 0 ? '+ Human' : ping.change < 0 ? '+ Robot' : 'Neutral',
+						label: ping.message,
+						value: Math.abs(ping.change)
+					});
+
 					this.resetSubmit();
 				} catch (e) {
 					console.log(e);
 					alert('something went wrong');
+
+					this.$gtm.trackEvent({
+						event: 'auth',
+						category: 'AuthenticationDeactivated',
+						action: e.message,
+						label: ping.key
+					});
+
 					this.$store.dispatch('unauth');
 				}
 

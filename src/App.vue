@@ -30,6 +30,7 @@
 		},
 		mounted() {
 			this.$store.dispatch('setHistoryRef', historyRef);
+			this.$gtm.trackView('Home', '/');
 		}
 	};
 </script>
