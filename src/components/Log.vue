@@ -10,9 +10,6 @@
 
 <script>
 	import { mapGetters, mapState } from 'vuex';
-	import { db } from '../db';
-
-	const historyRef = db.ref('pings');
 
 	export default {
 		name: 'Log',

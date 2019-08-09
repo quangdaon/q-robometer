@@ -97,8 +97,9 @@
 				try {
 					await historyRef.push(ping);
 
-					this.$gtm.trackEvent({
-						event: 'update',
+					this.$store.dispatch('logData', {
+						gtm: true,
+						type: 'update',
 						category: 'Ping',
 						action: ping.change > 0 ? '+ Human' : ping.change < 0 ? '+ Robot' : 'Neutral',
 						label: ping.message,
@@ -110,7 +111,8 @@
 					console.log(e);
 					alert('something went wrong');
 
-					this.$gtm.trackEvent({
+					this.$store.dispatch('logData', {
+						gtm: true,
 						event: 'auth',
 						category: 'AuthenticationDeactivated',
 						action: e.message,

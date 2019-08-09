@@ -30,6 +30,7 @@
 		},
 		mounted() {
 			this.$store.dispatch('setHistoryRef', historyRef);
+			this.$store.dispatch('initFingerprint');
 			this.$gtm.trackView('Home', '/');
 		}
 	};

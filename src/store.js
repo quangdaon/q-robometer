@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Fingerprint2 from 'fingerprintjs2';
 import { firebaseAction, vuexfireMutations } from 'vuexfire';
 import { db } from './db';
 
@@ -12,6 +13,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
+		fingerprint: null,
 		ready: false,
 		history: [],
 		showFullHistory: typeof storage.showFullHistory !== 'undefined' ? storage.showFullHistory : true,
@@ -44,6 +46,9 @@ export default new Vuex.Store({
 		setAuth(state, val) {
 			state.auth.validated = val.validated;
 			state.auth.key = val.key;
+		},
+		setFingerprint(state, val) {
+			state.fingerprint = val;
 		}
 	},
 	actions: {
@@ -70,24 +75,33 @@ export default new Vuex.Store({
 				key: ''
 			});
 		},
+		async initFingerprint(context) {
+			const components = await Fingerprint2.getPromise();
+			const values = components.map(c => c.value);
+			const hash = Fingerprint2.x64hash128(values.join(''), 31);
+
+			context.commit('setFingerprint', hash);
+		},
 		async authenticate(context, val) {
 			const hash = crypto.createHmac('sha256', val).digest('hex');
 			await context.dispatch('validateHash', hash);
 
-			const gtmEvent = {
-				event: 'auth',
+			const logData = {
+				type: 'auth',
 				category: 'AuthenticationAttempt',
 				action: 'Success',
-				label: '***********'
+				label: '***********',
+				gtm: true
 			};
 
 			if (!context.state.auth.validated) {
 				alert('nope!');
-				gtmEvent.action = 'Failure';
-				gtmEvent.label = val;
+				logData.action = 'Failure';
+				logData.label = val;
 			}
 
-			Vue.gtm.trackEvent(gtmEvent);
+			context.dispatch('logData', logData);
+
 		},
 		async validateHash(context, hash) {
 			const snapshot = await db.ref('auth/password/' + hash).once('value');
@@ -99,6 +113,28 @@ export default new Vuex.Store({
 					validated: true,
 					key: hmac
 				});
+			}
+		},
+		logData(context, data) {
+			const logGtm = data.gtm;
+			delete data.gtm;
+
+			if (context.state.fingerprint) {
+				data.fingerprint = context.state.fingerprint;
+			}
+
+			db.ref('logs').push(data);
+
+			if (logGtm) {
+				const gtmEvent = {
+					event: data.type,
+					category: data.category,
+					action: data.action,
+					label: data.label,
+					value: data.value
+				};
+
+				Vue.gtm.trackEvent(gtmEvent);
 			}
 		}
 	}
