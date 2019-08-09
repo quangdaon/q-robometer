@@ -123,6 +123,8 @@ export default new Vuex.Store({
 				data.fingerprint = context.state.fingerprint;
 			}
 
+			data.timestamp = Date.now();
+
 			db.ref('logs').push(data);
 
 			if (logGtm) {
