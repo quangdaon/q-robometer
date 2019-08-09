@@ -92,7 +92,6 @@
 					key: this.$store.state.auth.key
 				};
 
-				console.log(ping);
 
 				try {
 					await historyRef.push(ping);
@@ -108,7 +107,6 @@
 
 					this.resetSubmit();
 				} catch (e) {
-					console.log(e);
 					alert('something went wrong');
 
 					this.$store.dispatch('logData', {
