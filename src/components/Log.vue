@@ -49,10 +49,33 @@
 </script>
 
 <style scoped>
+	.log:hover .log-message {
+		opacity: 0.25;
+	}
+	
+	.log:hover .log-item:hover .log-message {
+		opacity: 1;
+	}
+	
+	.log-item {
+		padding: 0.25em 0;
+	}
+	
+	
 	.log-message {
+		position: relative;
 		font-size: 0.875em;
 		font-style: italic;
 		margin: 0;
-		line-height: 1.5;
+		line-height: 1;
+		transform-origin: center center;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+	
+	.log-item:hover .log-message {
+		z-index: 2;
+		transform: scale(1.25);
+		overflow: visible;
 	}
 </style>
