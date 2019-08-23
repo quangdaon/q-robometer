@@ -23,7 +23,18 @@
 						<label for="panel-change">Change %</label>
 					</div>
 					<div class="panel-right">
-						<input type="number" id="panel-change" v-model.number="changePercent" min="-8" max="8" step="0.5">
+						<input type="number" id="panel-change" v-model.number="changePercent" min="0.5" max="8" step="0.5">
+					</div>
+				</div>
+				<div class="panel-row">
+					<div class="panel-left">
+						<label for="panel-direction">Direction</label>
+					</div>
+					<div class="panel-right">
+						<select id="panel-direction" v-model="multiplier">
+							<option value="1">Human</option>
+							<option value="-1">Robot</option>
+						</select>
 					</div>
 				</div>
 				<div class="panel-row">
@@ -31,12 +42,12 @@
 						<label for="panel-message">Message</label>
 					</div>
 					<div class="panel-right">
-						<input type="text" id="panel-message" v-model="message">
+						<input type="text" id="panel-message" v-model="message" required>
 					</div>
 				</div>
 				<div class="panel-row">
 					<div class="panel-buttons">
-						<button @click.prevent="clearLog" type="button">Clear Log</button>
+						<button @click.prevent="clearLog" type="button" v-if="!showFullHistory">Clear Log</button>
 						<button @click.prevent="resetSubmit" type="button">Reset</button>
 						<button type="submit" :disabled="!canSubmit">Submit</button>
 					</div>
@@ -76,10 +87,11 @@
 		name: 'ControlPanel',
 		data() {
 			return {
-				changePercent: 0,
+				changePercent: 0.5,
 				message: '',
 				password: '',
-				canSubmit: true
+				canSubmit: true,
+				multiplier: 1
 			};
 		},
 		methods: {
@@ -123,7 +135,7 @@
 				this.canSubmit = true;
 			},
 			resetSubmit() {
-				this.changePercent = 0;
+				this.changePercent = 0.5;
 				this.message = '';
 			},
 			resetAuth() {
@@ -148,7 +160,7 @@
 				}
 			},
 			changed() {
-				return this.changePercent / 100;
+				return (this.changePercent / 100) * this.multiplier;
 			}
 		}
 	};
@@ -197,7 +209,7 @@
 		flex: 0 0 65%;
 	}
 	
-	.panel-right input {
+	.panel-right input, .panel-right select {
 		display: block;
 		width: 100%;
 		min-width: 0;
