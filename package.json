@@ -1,7 +1,12 @@
 {
   "name": "q-robometer",
+  "title": "Quangdao's Robometer",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quangdaon/q-robometer.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
