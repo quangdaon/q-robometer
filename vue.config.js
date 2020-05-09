@@ -1,3 +1,3 @@
 module.exports = {
-	publicPath: '/robometer/'
+	publicPath: '/q-robometer/'
 };
