@@ -16,6 +16,7 @@ jobs:
         - DOC_REPO="q-robometer"
         - DOC_BRANCH="gh-pages"
         - DOC_FOLDER_NAME="dist"
+        - DEPLOY_FOLDER_NAME="deploy"
         - DOC_REPO_URL="github.com/${GH_USER}/${DOC_REPO}.git"
         - secure: gE2kdwHzOetSn8NZdDj/pswYHZQ+TUZLvJVyplx5eVB3ki46H81raHbqpqGs/ls8k4b8CdhB6XYKEXFT/RTDfgoDYqTuk8xdZJS7D99bjwe+jPgYtCG3kV/PqoNEYVsy/UvnUgiUFjS5zR7slVPXOW5WNNUHE48l+lGxBaOQBJr1enrD4wZ1b2Wkgxmo8t0qCDlchq0SA1/WEj/iJrnVW58GI+xLeCKuCmlMIUODPQzu3lkLycRntWw0Zyv1QpHH5M9n0xt/rJMo3t5ZVTpSOP1MDIfuNXlyz8WR7cBYucgKmflzXRtAVgma6UvkfoWp1SD8/LbHU+90DrNa3O25UbmNzov2eppiZrtNSSzccvfSTHZHCvJ2msAcSNv918eqAj3vRframL+3KO0mOgmrTWaI4i+M2imnzVEUigK9KmrjtdbA5LyUs7AmklVV5dUapdqkLtEIZQp0M6ZQIJRmgc9tO516sPnIwsGT8HpTTZB48gSzzc6dG1bIMCzGmyqL9333zJf4pmTM2W8b3/yQ+LL+g+U1y/pfnX+I57kN0cINNclYBftB2/Cvxc0TI9WN/VwDZq98PI/yxrK/UBzM4kjmKgEtzJ4UkrPwi1e6D7N2iDtfV8tOCE6WFwdKHDsR0waFUiP7FmIDgnlzxcgJ+qG7R92xAoEbvYFKSRF9ZYk=
       script:
@@ -25,9 +26,10 @@ jobs:
         - git remote
         - git config user.email ${GH_EMAIL}
         - git config user.name ${GH_USER}
-        - git add ${DOC_FOLDER_NAME}/* --force
+        - git subtree add --prefix ${DEPLOY_FOLDER_NAME} "https://${GITHUB_ACCESS_TOKEN}@${DOC_REPO_URL}" ${DOC_BRANCH}
+        - cp -rf ${DOC_FOLDER_NAME}/* ${DEPLOY_FOLDER_NAME}
+        - git add ${DEPLOY_FOLDER_NAME}/*
         - git commit -m "${DOC_REPO} - ${MESSAGE}"
-        - git subtree pull --prefix ${DOC_FOLDER_NAME} "https://${GITHUB_ACCESS_TOKEN}@${DOC_REPO_URL}" ${DOC_BRANCH}
-        - git subtree push --prefix ${DOC_FOLDER_NAME} "https://${GITHUB_ACCESS_TOKEN}@${DOC_REPO_URL}" ${DOC_BRANCH}
+        - git subtree push --prefix ${DEPLOY_FOLDER_NAME} "https://${GITHUB_ACCESS_TOKEN}@${DOC_REPO_URL}" ${DOC_BRANCH}
 stages:
   - name: deploy
