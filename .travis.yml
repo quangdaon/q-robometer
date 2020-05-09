@@ -1,7 +1,4 @@
 language: node_js
-node_js:
-  - stable
-  - 10.3.0
 cache:
   directories:
     - node_modules
@@ -30,6 +27,6 @@ jobs:
         - git config user.name ${GH_USER}
         - git add ${DOC_FOLDER_NAME}/* --force
         - git commit -m "${DOC_REPO} - ${MESSAGE}"
-        - git subtree push --prefix ${DOC_FOLDER_NAME} "https://${GITHUB_ACCESS_TOKEN}@${DOC_REPO_URL}" ${DOC_BRANCH}
+        - git subtree push --prefix ${DOC_FOLDER_NAME} "https://${GITHUB_ACCESS_TOKEN}@${DOC_REPO_URL}" ${DOC_BRANCH} --force
 stages:
   - name: deploy
